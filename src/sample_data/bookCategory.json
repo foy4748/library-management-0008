@@ -1,0 +1,22 @@
+{
+  "0": {
+    "book_category_idx": 0,
+    "book_category": "Thriller"
+  },
+  "1": {
+    "book_category_idx": 1,
+    "book_category": "Science Fiction"
+  },
+  "2": {
+    "book_category_idx": 2,
+    "book_category": "Novel"
+  },
+  "3": {
+    "book_category_idx": 3,
+    "book_category": "Travel"
+  },
+  "4": {
+    "book_category_idx": 4,
+    "book_category": "Comedy"
+  }
+}

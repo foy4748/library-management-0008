@@ -1,0 +1,340 @@
+"use server";
+import Books from "@/Models/Books";
+const sampleData = [
+  {
+    book_title: "Never Lie",
+    book_img:
+      "https://m.media-amazon.com/images/I/8196x-1wIOL._UX300_PJku-sticker-v8,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 3.99,
+    book_category: "Thriller",
+    book_category_idx: 0,
+    book_rating: 1.7,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Housemaid",
+    book_img:
+      "https://m.media-amazon.com/images/I/81AHTyq2wVL._AC._SR360,460.jpg",
+    book_price: 6.5,
+    book_category: "Science Fiction",
+    book_category_idx: 1,
+    book_rating: 4.5,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Teacher: A Psychological Thriller",
+    book_img:
+      "https://m.media-amazon.com/images/I/81u6ROdRgkL._UX300_PJku-sticker-v8,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 3.99,
+    book_category: "Novel",
+    book_category_idx: 2,
+    book_rating: 3.0,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "On Her Watch (Bree Taggert Book 8)",
+    book_img:
+      "https://m.media-amazon.com/images/I/91TKSBz-3cL._UX300_PJku-headphones-v2,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 6.99,
+    book_category: "Travel",
+    book_category_idx: 3,
+    book_rating: 2.8,
+    book_author: "Random Author",
+  },
+  {
+    book_title:
+      "The Housemaid: An absolutely addictive psychological thriller with a jaw-dropping twist",
+    book_img:
+      "https://m.media-amazon.com/images/I/81f2axXm7+L._UX300_PJku-sticker-v8,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 3.99,
+    book_category: "Comedy",
+    book_category_idx: 4,
+    book_rating: 2.6,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "First Lie Wins: Reese's Book Club Pick (A Novel)",
+    book_img:
+      "https://m.media-amazon.com/images/I/81WUVcGdvDL._AC._SR360,460.jpg",
+    book_price: 7.99,
+    book_category: "Thriller",
+    book_category_idx: 0,
+    book_rating: 4.3,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Think Twice (Myron Bolitar)",
+    book_img:
+      "https://m.media-amazon.com/images/I/71rd5JlVl7L._AC._SR360,460.jpg",
+    book_price: 15.99,
+    book_category: "Science Fiction",
+    book_category_idx: 1,
+    book_rating: 4.6,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Haunting Adeline (Cat and Mouse Duet Book 1)",
+    book_img:
+      "https://m.media-amazon.com/images/I/91foIfs9XeL._UX300_PJku-sticker-v8,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 4.99,
+    book_category: "Novel",
+    book_category_idx: 2,
+    book_rating: 4.8,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "None of This Is True: A Novel",
+    book_img:
+      "https://m.media-amazon.com/images/I/81vY9hRyKgL._AC._SR360,460.jpg",
+    book_price: 10.67,
+    book_category: "Travel",
+    book_category_idx: 3,
+    book_rating: 0.5,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Home Is Where the Bodies Are",
+    book_img:
+      "https://m.media-amazon.com/images/I/91RLGboBJML._AC._SR360,460.jpg",
+    book_price: 5.99,
+    book_category: "Comedy",
+    book_category_idx: 4,
+    book_rating: 3.6,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Housemaid's Secret",
+    book_img:
+      "https://m.media-amazon.com/images/I/81LZXcfKqJL._AC._SR360,460.jpg",
+    book_price: 6.5,
+    book_category: "Thriller",
+    book_category_idx: 0,
+    book_rating: 2.9,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Maid's Diary: A Novel",
+    book_img:
+      "https://m.media-amazon.com/images/I/71FlboLr2AL._UX300_PJku-headphones-v2,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 2.49,
+    book_category: "Science Fiction",
+    book_category_idx: 1,
+    book_rating: 0.7,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Housemaid",
+    book_img:
+      "https://m.media-amazon.com/images/I/81AHTyq2wVL._AC._SR360,460.jpg",
+    book_price: 6.5,
+    book_category: "Novel",
+    book_category_idx: 2,
+    book_rating: 0.9,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Remarkably Bright Creatures: A Read with Jenna Pick",
+    book_img:
+      "https://m.media-amazon.com/images/I/81X7rAcaQkL._AC._SR360,460.jpg",
+    book_price: 18.65,
+    book_category: "Travel",
+    book_category_idx: 3,
+    book_rating: 2.7,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Housemaid's Secret",
+    book_img:
+      "https://m.media-amazon.com/images/I/81LZXcfKqJL._AC._SR360,460.jpg",
+    book_price: 6.5,
+    book_category: "Comedy",
+    book_category_idx: 4,
+    book_rating: 1.5,
+    book_author: "Random Author",
+  },
+  {
+    book_title:
+      "The 24th Hour: Is This The End? (A Women's Murder Club Thriller, 24)",
+    book_img:
+      "https://m.media-amazon.com/images/I/81YyMrL1HvL._AC._SR360,460.jpg",
+    book_price: 19.2,
+    book_category: "Thriller",
+    book_category_idx: 0,
+    book_rating: 4.6,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Teacher",
+    book_img:
+      "https://m.media-amazon.com/images/I/81-awZkzwFL._AC._SR360,460.jpg",
+    book_price: 8.99,
+    book_category: "Science Fiction",
+    book_category_idx: 1,
+    book_rating: 3.1,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "A Calamity of Souls",
+    book_img:
+      "https://m.media-amazon.com/images/I/81xy5qKVhcL._AC._SR360,460.jpg",
+    book_price: 15,
+    book_category: "Novel",
+    book_category_idx: 2,
+    book_rating: 3.3,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Think Twice (Myron Bolitar, 12)",
+    book_img:
+      "https://m.media-amazon.com/images/I/71rd5JlVl7L._AC._SR360,460.jpg",
+    book_price: 20.98,
+    book_category: "Travel",
+    book_category_idx: 3,
+    book_rating: 0.7,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Hunting Adeline (Cat and Mouse Duet)",
+    book_img:
+      "https://m.media-amazon.com/images/I/71ez-yeSaFL._AC._SR360,460.jpg",
+    book_price: 17.32,
+    book_category: "Comedy",
+    book_category_idx: 4,
+    book_rating: 1.9,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Inmate",
+    book_img:
+      "https://m.media-amazon.com/images/I/818na1KA3FL._AC._SR360,460.jpg",
+    book_price: 8.99,
+    book_category: "Thriller",
+    book_category_idx: 0,
+    book_rating: 0.4,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Shōgun: The Complete Novel",
+    book_img:
+      "https://m.media-amazon.com/images/I/81FyuFYZjsL._AC._SR360,460.jpg",
+    book_price: 40.39,
+    book_category: "Science Fiction",
+    book_category_idx: 1,
+    book_rating: 4.8,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Project Hail Mary: A Novel",
+    book_img:
+      "https://m.media-amazon.com/images/I/81gYjHx8YmL._AC._SR360,460.jpg",
+    book_price: 13.98,
+    book_category: "Novel",
+    book_category_idx: 2,
+    book_rating: 1.9,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "On Her Watch (Bree Taggert Book 8)",
+    book_img:
+      "https://m.media-amazon.com/images/I/91TKSBz-3cL._UX300_PJku-headphones-v2,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 6.99,
+    book_category: "Travel",
+    book_category_idx: 3,
+    book_rating: 0.7,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Think Twice (Myron Bolitar)",
+    book_img:
+      "https://m.media-amazon.com/images/I/71rd5JlVl7L._AC._SR360,460.jpg",
+    book_price: 15.99,
+    book_category: "Comedy",
+    book_category_idx: 4,
+    book_rating: 3.3,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Home Is Where the Bodies Are",
+    book_img:
+      "https://m.media-amazon.com/images/I/91RLGboBJML._AC._SR360,460.jpg",
+    book_price: 5.99,
+    book_category: "Thriller",
+    book_category_idx: 0,
+    book_rating: 3.0,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Girl, Missing",
+    book_img:
+      "https://m.media-amazon.com/images/I/81G-MJV530L._AC._SR360,460.jpg",
+    book_price: 4.99,
+    book_category: "Science Fiction",
+    book_category_idx: 1,
+    book_rating: 0.1,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "Cut and Thirst: A Short Story",
+    book_img:
+      "https://m.media-amazon.com/images/I/819El3T-SML._UX300_PJku-headphones-v2,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 1.99,
+    book_category: "Novel",
+    book_category_idx: 2,
+    book_rating: 4.9,
+    book_author: "Random Author",
+  },
+  {
+    book_title: "The Housemaid Is Watching",
+    book_img:
+      "https://m.media-amazon.com/images/I/91OSM58Y-pL._AC._SR360,460.jpg",
+    book_price: 13.09,
+    book_category: "Travel",
+    book_category_idx: 3,
+    book_rating: 3.5,
+    book_author: "Random Author",
+  },
+  {
+    book_title:
+      "The 24th Hour: Is This The End? (A Women's Murder Club Thriller)",
+    book_img:
+      "https://m.media-amazon.com/images/I/81YyMrL1HvL._AC._SR360,460.jpg",
+    book_price: 14.99,
+    book_category: "Comedy",
+    book_category_idx: 4,
+    book_rating: 2.7,
+    book_author: "Random Author",
+  },
+  {
+    book_title:
+      "The Runaway Mate: A Rejected Mate Shifter Romance (Shifters of the Three Rivers Book 1)",
+    book_img:
+      "https://m.media-amazon.com/images/I/91v-urUX5KL._UX300_PJku-sticker-v8,TopRight,0,-50._AC._SR360,460_.jpg",
+    book_price: 2.99,
+    book_category: "Thriller",
+    book_category_idx: 0,
+    book_rating: 2.6,
+    book_author: "Random Author",
+  },
+];
+
+export const seedDb = async () => {
+  try {
+    for (const book of sampleData) {
+      await Books.create(book);
+    }
+    return { error: false, message: "Success" };
+  } catch (error) {
+    console.log(error);
+    return { error: true, message: "Failed" };
+  }
+};
+
+export const getAllBooks = async () => {
+  try {
+    const books = await Books.find();
+    return books;
+  } catch (error) {
+    console.log(error);
+    return { error: true, message: "Failed to get all books" };
+  }
+};
