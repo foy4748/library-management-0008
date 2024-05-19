@@ -1,5 +1,6 @@
 import { IBook } from "@/Models/Books";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState } from "react";
 
 function SingleBookCard({
@@ -17,11 +18,13 @@ function SingleBookCard({
   book_author: string;
   book_rating: number;
   book_category: string;
-  book_quantity: number;
+  book_quantity?: number;
 }) {
   return (
     <div>
-      <Image src={book_img} alt={book_title} height={400} width={200} />
+      <Link href={`/books/${_id}`}>
+        <Image src={book_img} alt={book_title} height={400} width={200} />
+      </Link>
     </div>
   );
 }

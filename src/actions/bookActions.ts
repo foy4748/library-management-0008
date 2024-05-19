@@ -1,5 +1,10 @@
 "use server";
-import Books from "@/Models/Books";
+import Books, { IBook } from "@/Models/Books";
+import { IBorrowedBook } from "@/Models/BorroweBooks";
+import BorrowedBooks from "@/Models/BorroweBooks";
+import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
+const ObjectId = mongoose.Types.ObjectId;
 const sampleData = [
   {
     book_title: "Never Lie",
@@ -337,4 +342,54 @@ export const getAllBooks = async () => {
     console.log(error);
     return { error: true, message: "Failed to get all books" };
   }
+};
+
+export const getSingleBook = async (_id: string) => {
+  try {
+    const singleBook = await Books.findById(_id).lean();
+    return singleBook;
+  } catch (error) {
+    console.log(error);
+    return { error: true, message: `Failed to get book with ID: ${_id}` };
+  }
+};
+
+export const borrowBook = async (_id: string, bookDetails: Partial<IBook>) => {
+  const filter = { _id: new ObjectId(_id) };
+  const isBookBorrowed = await BorrowedBooks.find({ book_id: _id });
+  if (!isBookBorrowed) {
+    const patch = {
+      $inc: { book_quantity: -1 },
+    };
+    await Books.updateOne(filter, patch); //, { session });
+    const { _id: book_id, book_quantity, ...rest } = bookDetails;
+    const payload = {
+      book_id: _id,
+      ...rest,
+    };
+    console.log(payload);
+    await BorrowedBooks.create(payload);
+
+    revalidatePath(`/books/${_id}`);
+
+    return { error: false, message: "Book was borrowed Succesfully" };
+  }
+
+  return {
+    error: true,
+    message: `Book with id ${_id} is already borrowed by you`,
+  };
+};
+
+export const returnBorrowedBook = async (borrowedBook_id: string) => {
+  const borrowBook = await BorrowedBooks.findById(borrowedBook_id);
+  const filter = { _id: new ObjectId(String(borrowBook?.book_id)) };
+  const patch = { $inc: { book_quantity: 1 } };
+  await Books.updateOne(filter, patch);
+  return { error: false, message: "Book was returned Succesfully" };
+};
+
+export const getBorrowedBooks = async () => {
+  const borrowBooks = await BorrowedBooks.find({}).lean();
+  return borrowBooks;
 };
