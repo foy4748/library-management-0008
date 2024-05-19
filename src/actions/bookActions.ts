@@ -1,6 +1,5 @@
 "use server";
 import Books, { IBook } from "@/Models/Books";
-import { IBorrowedBook } from "@/Models/BorroweBooks";
 import BorrowedBooks from "@/Models/BorroweBooks";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
