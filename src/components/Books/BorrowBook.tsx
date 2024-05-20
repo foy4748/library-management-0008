@@ -1,9 +1,8 @@
 "use client";
 import { IBook } from "@/Models/Books";
 import { borrowBook } from "@/actions/bookActions";
-import pickKeys from "@/utils/pickKeys";
 
-function BorrowBook({ _id, bookDetails }: { _id: string; bookDetails: IBook }) {
+function BorrowBook({ _id, payload }: { _id: string; payload: IBook }) {
   const handleBorrow = async () => {
     /*
     book_title: String,
@@ -15,16 +14,6 @@ function BorrowBook({ _id, bookDetails }: { _id: string; bookDetails: IBook }) {
     book_author: String,
 
   */
-    const payload = pickKeys(
-      bookDetails,
-      "book_title",
-      "book_img",
-      "book_price",
-      "book_category",
-      "book_category_idx",
-      "book_rating",
-      "book_author"
-    );
     const response = await borrowBook(_id, payload);
     console.log(response);
   };

@@ -335,7 +335,7 @@ export const seedDb = async () => {
 
 export const getAllBooks = async () => {
   try {
-    const books = await Books.find();
+    const books = await Books.find().lean().exec();
     return books;
   } catch (error) {
     console.log(error);
@@ -345,7 +345,7 @@ export const getAllBooks = async () => {
 
 export const getSingleBook = async (_id: string) => {
   try {
-    const singleBook = await Books.findById(_id).lean();
+    const singleBook = await Books.findById(_id).lean().exec();
     return singleBook;
   } catch (error) {
     console.log(error);
@@ -389,6 +389,6 @@ export const returnBorrowedBook = async (borrowedBook_id: string) => {
 };
 
 export const getBorrowedBooks = async () => {
-  const borrowBooks = await BorrowedBooks.find({}).lean();
+  const borrowBooks = await BorrowedBooks.find({}).lean().exec();
   return borrowBooks;
 };
