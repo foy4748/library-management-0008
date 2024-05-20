@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import Users, { IUser } from "./Models/Users";
+import bcryptjs from "bcryptjs";
 
 export const authConfig = {
   // Callback
@@ -21,18 +23,29 @@ export const authConfig = {
       credentials: {
         email: {
           label: "Email",
-          type: "text",
+          type: "email",
           placeholder: "example@example.example",
         },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
+        const { email, password } = credentials;
+        const isUserFound = (await Users.findOne({ email })
+          .lean()
+          .exec()) as IUser;
 
-        if (user) {
+        if (isUserFound) {
           // Any object returned will be saved in `user` property of the JWT
-          return user;
+          const isPasswordCorrect = await bcryptjs.compare(
+            password,
+            String(isUserFound?.password)
+          );
+          if (isPasswordCorrect) {
+            return isUserFound;
+          } else {
+            return null;
+          }
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
           return null;
@@ -43,7 +56,11 @@ export const authConfig = {
     }),
     // ...add more providers here
   ],
-  secret: process.env.AUTH_SECRET,
+  session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
+  jwt: {
+    secret: process.env.AUTH_SECRET,
+    maxAge: 24 * 60 * 60,
+  },
 } satisfies NextAuthOptions;
 
 const handler = NextAuth(authConfig);

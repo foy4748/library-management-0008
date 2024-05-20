@@ -6,6 +6,7 @@ import SingleBookCard from "@/components/Books/ui/SingleBookCard";
 import { getAllBooks } from "@/actions/bookActions";
 import { IBook } from "@/Models/Books";
 import Layout from "@/components/ui/Layout";
+import Link from "next/link";
 //import SeedBooks from "./SeedBook";
 async function ToDoView() {
   const data = await ToDo.find({});
@@ -26,6 +27,7 @@ async function ToDoView() {
           );
         })}
         <ToDoAdd />
+        <Link href="/authentication/register">Register</Link>
       </div>
       <div>
         <Layout>
